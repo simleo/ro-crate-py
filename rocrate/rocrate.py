@@ -31,7 +31,7 @@ import warnings
 
 from collections import OrderedDict
 from pathlib import Path
-from urllib.parse import urljoin
+from urllib.parse import urljoin, quote
 
 from .memory_buffer import MemoryBuffer
 from .model import (
@@ -110,13 +110,13 @@ class ROCrate():
             root = Path(root)
             for name in dirs:
                 source = root / name
-                self.add_dataset(source, source.relative_to(top_dir))
+                self.add_dataset(source, quote(str(source.relative_to(top_dir))))
             for name in files:
                 source = root / name
                 if source == top_dir / Metadata.BASENAME or source == top_dir / LegacyMetadata.BASENAME:
                     continue
                 if source != top_dir / Preview.BASENAME:
-                    self.add_file(source, source.relative_to(top_dir))
+                    self.add_file(source, quote(str(source.relative_to(top_dir))))
                 elif not gen_preview:
                     self.add(Preview(self, source))
 
